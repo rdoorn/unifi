@@ -7,6 +7,7 @@ package unifi
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"time"
 )
 
@@ -62,6 +63,7 @@ type USW struct {
 	SiteID             string         `json:"site_id"`
 	SSHSessionTable    []interface{}  `json:"ssh_session_table"`
 	Stat               struct {
+        Sw struct {
 		Bytes    float64   `json:"bytes"`
 		Datetime time.Time `json:"datetime"`
 		Duration float64   `json:"duration"`
@@ -89,6 +91,7 @@ type USW struct {
 		TxMulticast float64 `json:"tx_multicast"`
 		TxPackets   float64 `json:"tx_packets"`
 		TxRetries   float64 `json:"tx_retries"`
+        } `json:"sw"`
 	} `json:"stat"`
 	State       DevState `json:"state"`
 	StpPriority string   `json:"stp_priority"`
@@ -183,6 +186,7 @@ func (u *Unifi) USW(site *Site, name string) (*USW, error) {
 		return nil, err
 	}
 	for _, d := range devices {
+        log.Printf("device name: %s", d.DeviceName())
 		if name == d.DeviceName() {
 			return &d, nil
 		}
